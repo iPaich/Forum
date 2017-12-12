@@ -31,11 +31,18 @@ public function setUp()
     public function a_user_can_view_a_single_thread()
     {
 
-        $response = $this->get('/threads/' . $this->thread->id);
+        $response = $this->get('/threads/' . $this->thread->channel->slug . '/' . $this->thread->id);
 
         $response->assertSee($this->thread->title);
     }
 
+
+/** @test */
+public function a_thread_can_make_a_string_path($value='')
+{
+  $thread = create('App\Thread');
+  $this->assertEquals('/threads/' . $thread->channel->slug . '/' . $thread->id, $thread->path());
+}
 
 /** @test */
 
@@ -43,7 +50,7 @@ function a_user_can_read_replies()
 {
       $reply = factory('App\Reply')->create(['thread_id' => $this->thread->id]);
 
-      $response = $this->get('/threads/' . $this->thread->id);
+      $response = $this->get('/threads/' . $this->thread->channel->slug . '/' . $this->thread->id);
 
       $response->assertSee($reply->body);
 
@@ -67,6 +74,13 @@ function a_thread_can_add_a_reply()
     'user_id'=>'1'
   ]);
   $this->assertCount(1, $this->thread->replies);
+}
+
+/** @test */
+function a_thread_belongs_to_a_channel()
+{
+  $thread = create('App\Thread');
+  $this->assertInstanceOf('App\Channel', $thread->channel);
 }
 
 }
