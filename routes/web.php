@@ -25,3 +25,4 @@ Route::post('/threads', 'ThreadController@store');
 Route::get('/threads/{channel}/{thread}', 'ThreadController@show');
 // Route::resource('threads', 'ThreadController');
 Route::post('/threads/{channel}/{thread}/replies', 'ReplyController@store');
+Route::get('threads/{channel}', 'ThreadController@index');
